@@ -44,6 +44,35 @@ The SchedulerListener interface provides notifications of Scheduler events and e
 Listeners can be associated with local schedulers through the ListenerManager interface.
 ```
 
+###  抽象模型
+
+Job
+任务框架仅仅抽象所有任务被调用的统一接口.
+用户实现的Job类,即不同任务的具体执行逻辑.
+
+JobDetail
+向Scheduler注册同一个Job的多个实例(且每个实例所携带的初始属性不同),此时就需要JobDetail这个抽象模型了.
+JobDetail即Job instance所携带的实例属性.
+这些实例属性中有一部分是metadata信息(即后续不会被更改, 比如JobKey/JobClass等),还有一部分属性是会改动(比如JobDataMap)
+Defines the job that needs to be executed, including the Job class and any necessary parameters.
+
+Scheduler
+A Scheduler maintains a registry of JobDetails and Triggers.
+This is the main interface of a Quartz Scheduler.
+The main interface for managing job scheduling. It is responsible for adding, removing, and executing jobs based on the triggers.
+
+Trigger
+Specifies when and how often a job should run.
+
+
+
+QuartzScheduler(核心实现类,不面向用户)
+StdScheduler(QuartzScheduler的proxy,面向用户)
+QuartzSchedulerThread(主线程,负责fire Trigger,即在main loop中查询所有的Trigger,一步步更改Trigger的状态和提交待执行的Job)
+WorkerThread(工作线程,执行Job,在worker loop中等待后执行新的Job)
+JobStore(JobStore会维护Trigger实例的状态,状态枚举值参考org.quartz.impl.jdbcjobstore.Constants.STATE_XXX)
+
+
 
 
 ## 配置文件
@@ -74,22 +103,5 @@ org.quartz.jobStore.class - All of Quartz’s data, such as details of jobs and 
 
 
 
-
-
-Job(任务的具体执行内容)
-JobDetail(JobDetails are metadata related to a Job implementation, they hold a reference to the Job you want to run and allow you to provide some additional data to your Job)
-Scheduler
-Trigger
-Schedule
-Calendar
-QuartzScheduler(核心实现类,不面向用户)
-StdScheduler(QuartzScheduler的proxy,面向用户)
-QuartzSchedulerThread(主线程,负责fire Trigger,即在main loop中查询所有的Trigger,一步步更改Trigger的状态和提交待执行的Job)
-WorkerThread(工作线程,执行Job,在worker loop中等待后执行新的Job)
-JobStore(JobStore会维护Trigger实例的状态,状态枚举值参考org.quartz.impl.jdbcjobstore.Constants.STATE_XXX)
-
-
-
 ## 注意事项
-1. 基于separation of concerns原则,用户期望被执行的方法被单独放在类Job,其他关于该Job的信息被放在了
-2. 对于jdbc类型的持久化JobStore,JobStore在维护Trigger状态时,使用了数据库行锁来保护状态一致性的.
+1. 对于jdbc类型的持久化JobStore,JobStore在维护Trigger状态时,使用了数据库行锁来保护状态一致性的.

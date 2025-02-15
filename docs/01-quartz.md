@@ -5,9 +5,6 @@
 https://www.quartz-scheduler.org/documentation/quartz-2.3.0/quick-start.html
 
 
-https://www.quartz-scheduler.net/documentation/quartz-3.x/tutorial/
-
-
 
 ## 关键概念
 

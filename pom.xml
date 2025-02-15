@@ -12,6 +12,7 @@
         <module>ch00-commons</module>
         <module>ch10-quartz-basic</module>
         <module>ch20-quartz-boot</module>
+        <module>ch30-spring-scheduling</module>
     </modules>
 
     <properties>

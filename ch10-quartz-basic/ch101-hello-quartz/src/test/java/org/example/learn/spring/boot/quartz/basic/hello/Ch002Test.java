@@ -12,6 +12,8 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +22,8 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class Ch002Test {
+
+    private static final Logger logger = LoggerFactory.getLogger(Ch002Test.class);
 
     /**
      * 先添加一个job(没有声明对应的trigger)

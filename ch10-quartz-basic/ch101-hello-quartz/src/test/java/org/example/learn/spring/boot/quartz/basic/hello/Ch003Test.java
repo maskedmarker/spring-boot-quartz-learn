@@ -10,6 +10,8 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +22,8 @@ import static org.quartz.impl.matchers.GroupMatcher.groupEquals;
  *
  */
 public class Ch003Test {
+
+    private static final Logger logger = LoggerFactory.getLogger(Ch003Test.class);
 
     /**
      * Listing Jobs in the Scheduler
@@ -52,7 +56,7 @@ public class Ch003Test {
         for (String group : scheduler.getJobGroupNames()) {
             // enumerate each job in group
             for (JobKey jobKey : scheduler.getJobKeys(groupEquals(group))) {
-                System.out.println("Found job identified by: " + jobKey);
+                logger.info("Found job identified by: {}", jobKey);
             }
         }
 

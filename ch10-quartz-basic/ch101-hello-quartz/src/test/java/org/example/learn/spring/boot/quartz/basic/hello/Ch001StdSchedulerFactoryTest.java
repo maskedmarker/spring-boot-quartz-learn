@@ -11,6 +11,8 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -23,6 +25,8 @@ import java.util.concurrent.TimeUnit;
  * If you wish to use a file other than these defaults, you must define the system property 'org.quartz.properties' to point to the file you want.
  */
 public class Ch001StdSchedulerFactoryTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(Ch001StdSchedulerFactoryTest.class);
 
     @Test
     public void test0() {

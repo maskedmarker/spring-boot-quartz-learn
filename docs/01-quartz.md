@@ -65,12 +65,36 @@ Trigger
 Specifies when and how often a job should run.
 
 
+JobStore
+The interface to be implemented by classes that want to provide a Job and Trigger storage mechanism for the org.quartz.core.QuartzScheduler's use.
+Storage of Jobs and Triggers should be keyed on the combination of their name and group for uniqueness.
+
+```text
+Trigger实例的状态,状态枚举值参考org.quartz.impl.jdbcjobstore.Constants.STATE_XXX
+
+STATE_WAITING
+STATE_ACQUIRED
+STATE_EXECUTING
+STATE_COMPLETE
+STATE_BLOCKED
+STATE_ERROR
+STATE_PAUSED
+STATE_PAUSED_BLOCKED
+STATE_DELETED
+STATE_MISFIRED (Deprecated)
+
+STATE_MISFIRED (Deprecated)
+Whether a trigger has misfired is no longer a state, 
+but rather now identified dynamically by whether the trigger's next fire time is more than the misfire threshold time in the past
+是否触发器发生了误触发（misfire）不再是一个静态的状态,而是动态地通过判断触发器的下次触发时间是否比误触发阈值时间更早来确定
+```
+
 
 QuartzScheduler(核心实现类,不面向用户)
 StdScheduler(QuartzScheduler的proxy,面向用户)
 QuartzSchedulerThread(主线程,负责fire Trigger,即在main loop中查询所有的Trigger,一步步更改Trigger的状态和提交待执行的Job)
 WorkerThread(工作线程,执行Job,在worker loop中等待后执行新的Job)
-JobStore(JobStore会维护Trigger实例的状态,状态枚举值参考org.quartz.impl.jdbcjobstore.Constants.STATE_XXX)
+
 
 
 

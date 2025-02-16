@@ -4,6 +4,7 @@ import org.example.learn.spring.boot.quartz.basic.hello.job.HelloJob;
 import org.junit.Test;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SimpleScheduleBuilder;
@@ -12,6 +13,7 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * StdSchedulerFactory
@@ -64,6 +66,45 @@ public class Ch001StdSchedulerFactoryTest {
             scheduler.scheduleJob(jobDetail, trigger);
 
             // 让scheduler执行一会任务,再shutdown scheduler
+            Thread.sleep(TimeUnit.SECONDS.toMillis(10));
+            scheduler.shutdown();
+        } catch (SchedulerException se) {
+            se.printStackTrace();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 先添加一个job(没有声明对应的trigger)
+     * 后续添加一个trigger,关联已存在的job
+     */
+    @Test
+    public void test2() {
+        try {
+            // Grab the Scheduler instance from the Factory
+            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+            scheduler.start();
+
+            JobDetail jobDetail = JobBuilder.newJob(HelloJob.class)
+                    .withIdentity("job1", "group1")
+                    .build();
+            // Add the the job to the scheduler's store for Later Use
+            scheduler.addJob(jobDetail, false);
+
+
+            // Define a Trigger that will fire "now" and associate it with the existing job
+            Trigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity("trigger1", "group1")
+                    .startNow()
+                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInSeconds(5)
+                            .repeatForever())
+                    .forJob(JobKey.jobKey("job1", "group1"))
+                    .build();
+            // Schedule the trigger
+            scheduler.scheduleJob(trigger);
+
             Thread.sleep(TimeUnit.SECONDS.toMillis(10));
             scheduler.shutdown();
         } catch (SchedulerException se) {

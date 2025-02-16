@@ -3,7 +3,7 @@
 ## 参考资料
 
 https://www.quartz-scheduler.org/documentation/quartz-2.3.0/quick-start.html
-
+https://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/
 
 
 ## 关键概念

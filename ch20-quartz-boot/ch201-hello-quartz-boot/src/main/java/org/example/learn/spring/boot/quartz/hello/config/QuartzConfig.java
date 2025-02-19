@@ -2,6 +2,7 @@ package org.example.learn.spring.boot.quartz.hello.config;
 
 import org.example.learn.spring.boot.quartz.hello.job.HelloJob;
 import org.example.learn.spring.boot.quartz.hello.job.LongTimeJob;
+import org.example.learn.spring.boot.quartz.hello.job.ShortTimeJob;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -43,7 +44,24 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
                 .forJob(job2)
                 .withIdentity("trigger2", "group2")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0/9 * * * * ?"))  // Runs every 5 seconds
+                .withSchedule(CronScheduleBuilder.cronSchedule("0/9 * * * * ?").withMisfireHandlingInstructionFireAndProceed())  // Runs every 5 seconds
+                .build();
+    }
+
+    @Bean
+    public JobDetail job3() {
+        return JobBuilder.newJob(ShortTimeJob.class)
+                .withIdentity("job3", "group3")
+                .storeDurably()
+                .build();
+    }
+
+    @Bean
+    public Trigger trigger3(JobDetail job3) {
+        return TriggerBuilder.newTrigger()
+                .forJob(job3)
+                .withIdentity("trigger3", "group3")
+                .withSchedule(CronScheduleBuilder.cronSchedule("0/7 * * * * ?").withMisfireHandlingInstructionIgnoreMisfires())  // Runs every 5 seconds
                 .build();
     }
 }

@@ -9,18 +9,18 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class LongTimeJob implements Job {
+public class ShortTimeJob implements Job {
 
-    private static Logger logger = LoggerFactory.getLogger(LongTimeJob.class);
+    private static Logger logger = LoggerFactory.getLogger(ShortTimeJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("{} is working at {}", LongTimeJob.class.getSimpleName(), new Date());
+        logger.info("{} is working at {}", ShortTimeJob.class.getSimpleName(), new Date());
         try {
             Thread.sleep(TimeUnit.SECONDS.toMillis(1000));
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        logger.info("{} complete at {}", LongTimeJob.class.getSimpleName(), new Date());
+        logger.info("{} complete at {}", ShortTimeJob.class.getSimpleName(), new Date());
     }
 }

@@ -40,3 +40,9 @@ The main processing loop of the QuartzSchedulerThread.
 ```text
 if (qsRsrcs.getThreadPool().runInThread(shell) == false) 
 ```
+
+
+
+By default:
+Quartz jobs are executed in a single-threaded manner within the same scheduler, 
+so if the previous job execution has not finished by the time the next trigger occurs, the next execution will be missed or queued depending on the configuration.

@@ -1,0 +1,59 @@
+# web server
+server:
+  port: 9080
+  servlet:
+    context-path: /myapp
+
+# spring
+spring:
+  application:
+    name: hello-quartz-boot
+  datasource:
+    url: jdbc:h2:tcp://localhost:9092/mem:test
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    platform: h2
+#    schema: classpath:schema.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
+#    data: classpath:data.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
+  quartz:
+    job-store-type: memory  # jdbc
+    scheduler-name: MyScheduler
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MySchedulerInstance
+            instanceId: AUTO
+          threadPool:
+            threadCount: 10  # Adjust the number of threads for Quartz to use
+          jobStore:
+            misfireThreshold: 60000  # 60 seconds for misfire handling
+          jobStoreClass: org.quartz.simpl.RAMJobStore  # org.quartz.impl.jdbcjobstore.JobStoreTX   org.quartz.simpl.RAMJobStore
+
+#  quartz:
+#    job-store-type: jdbc
+#    scheduler-name: MyScheduler
+#    properties:
+#      org:
+#        quartz:
+#          scheduler:
+#            instanceName: MySchedulerInstance
+#            instanceId: AUTO
+#          threadPool:
+#            threadCount: 10
+#          jobStoreClass: org.quartz.impl.jdbcjobstore.JobStoreTX
+#          jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+#          jobStore.dataSource: myDataSource
+#          jobStore.tablePrefix: QRTZ_  # Prefix for Quartz-related tables
+#          jobStore.isClustered: true  # Enable clustering if needed
+#          jobStore.clusterCheckinInterval: 20000  # Interval for cluster check-in (in milliseconds)
+
+
+# logging
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    org.quartz: INFO
+    org.example: DEBUG

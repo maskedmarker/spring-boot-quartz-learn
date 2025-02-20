@@ -16,23 +16,13 @@ spring:
     platform: h2
 #    schema: classpath:schema.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
 #    data: classpath:data.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
-  quartz:
-    job-store-type: memory  # jdbc
-    scheduler-name: MyScheduler
-    properties:
-      org:
-        quartz:
-          scheduler:
-            instanceName: MySchedulerInstance
-            instanceId: AUTO
-          threadPool:
-            threadCount: 10  # Adjust the number of threads for Quartz to use
-          jobStore:
-            misfireThreshold: 60000  # 60 seconds for misfire handling
-          jobStoreClass: org.quartz.simpl.RAMJobStore  # org.quartz.impl.jdbcjobstore.JobStoreTX   org.quartz.simpl.RAMJobStore
-
+  jpa:
+    hibernate:
+      ddl-auto: update #只有是update模式,data.sql的脚本才会被执行
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
 #  quartz:
-#    job-store-type: jdbc
+#    job-store-type: memory  # jdbc
 #    scheduler-name: MyScheduler
 #    properties:
 #      org:
@@ -41,19 +31,34 @@ spring:
 #            instanceName: MySchedulerInstance
 #            instanceId: AUTO
 #          threadPool:
-#            threadCount: 10
-#          jobStoreClass: org.quartz.impl.jdbcjobstore.JobStoreTX
-#          jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-#          jobStore.dataSource: myDataSource
-#          jobStore.tablePrefix: QRTZ_  # Prefix for Quartz-related tables
-#          jobStore.isClustered: true  # Enable clustering if needed
-#          jobStore.clusterCheckinInterval: 20000  # Interval for cluster check-in (in milliseconds)
+#            threadCount: 10  # Adjust the number of threads for Quartz to use
+#          jobStore:
+#            misfireThreshold: 60000  # 60 seconds for misfire handling
+#          jobStoreClass: org.quartz.simpl.RAMJobStore  # org.quartz.impl.jdbcjobstore.JobStoreTX   org.quartz.simpl.RAMJobStore
+
+  quartz:
+    job-store-type: jdbc
+    scheduler-name: MyScheduler
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: MySchedulerInstance
+            instanceId: AUTO
+          threadPool:
+            threadCount: 10
+          jobStoreClass: org.quartz.impl.jdbcjobstore.JobStoreTX
+          jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+          jobStore.dataSource: myDataSource
+          jobStore.tablePrefix: QRTZ_  # Prefix for Quartz-related tables
+          jobStore.isClustered: true  # Enable clustering if needed
+          jobStore.clusterCheckinInterval: 20000  # Interval for cluster check-in (in milliseconds)
 
 
 # logging
 logging:
   level:
-    root: INFO
-    org.springframework: INFO
-    org.quartz: INFO
+    root: DEBUG
+#    org.springframework: INFO
+    org.quartz: DEBUG
     org.example: DEBUG

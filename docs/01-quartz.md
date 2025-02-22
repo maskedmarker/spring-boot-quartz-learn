@@ -128,4 +128,4 @@ org.quartz.jobStore.class - All of Quartz’s data, such as details of jobs and 
 
 
 ## 注意事项
-1. 对于jdbc类型的持久化JobStore,JobStore在维护Trigger状态时,使用了数据库行锁来保护状态一致性的.
+quartz的建表语句都在jar中

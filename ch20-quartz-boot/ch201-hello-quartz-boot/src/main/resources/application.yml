@@ -13,14 +13,14 @@ spring:
     driverClassName: org.h2.Driver
     username: sa
     password:
-    platform: h2
+#    platform: h2
 #    schema: classpath:schema.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
 #    data: classpath:data.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
-  jpa:
-    hibernate:
-      ddl-auto: update #只有是update模式,data.sql的脚本才会被执行
-    database-platform: org.hibernate.dialect.H2Dialect
-    show-sql: true
+#  jpa:
+#    hibernate:
+#      ddl-auto: update #只有是update模式,data.sql的脚本才会被执行
+#    database-platform: org.hibernate.dialect.H2Dialect
+#    show-sql: true
 #  quartz:
 #    job-store-type: memory  # jdbc
 #    scheduler-name: MyScheduler
@@ -39,20 +39,25 @@ spring:
   quartz:
     job-store-type: jdbc
     scheduler-name: MyScheduler
+    jdbc:
+      initialize-schema: never # 是否自动使用 SQL 初始化 Quartz 表结构。这里设置成 never ，我们手动创建表结构。
     properties:
       org:
         quartz:
-          scheduler:
-            instanceName: MySchedulerInstance
-            instanceId: AUTO
+          # JobStore 相关配置
+          jobStore:
+            dataSource: datasource # 使用的数据源
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX # JobStore 实现类
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+            tablePrefix: QRTZ_ # Quartz 表前缀
+            isClustered: false # 是集群模式
+            clusterCheckinInterval: 1000
+            useProperties: false
+          # 线程池相关配置
           threadPool:
-            threadCount: 10
-          jobStoreClass: org.quartz.impl.jdbcjobstore.JobStoreTX
-          jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-          jobStore.dataSource: myDataSource
-          jobStore.tablePrefix: QRTZ_  # Prefix for Quartz-related tables
-          jobStore.isClustered: true  # Enable clustering if needed
-          jobStore.clusterCheckinInterval: 20000  # Interval for cluster check-in (in milliseconds)
+            threadCount: 25 # 线程池大小。默认为 10 。
+            threadPriority: 5 # 线程优先级
+            class: org.quartz.simpl.SimpleThreadPool # 线程池类型
 
 
 # logging

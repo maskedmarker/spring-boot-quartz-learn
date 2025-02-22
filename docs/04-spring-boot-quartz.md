@@ -65,3 +65,8 @@ static class QuartzSchedulerDependencyConfiguration {
     }
 }
 ```
+
+```text
+org.springframework.scheduling.quartz.SchedulerFactoryBean.initSchedulerFactory
+
+```

@@ -16,11 +16,6 @@ spring:
 #    platform: h2
 #    schema: classpath:schema.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
 #    data: classpath:data.sql #可以自定义文件名,当有该配置项时,会被auto-configure执行
-#  jpa:
-#    hibernate:
-#      ddl-auto: update #只有是update模式,data.sql的脚本才会被执行
-#    database-platform: org.hibernate.dialect.H2Dialect
-#    show-sql: true
 #  quartz:
 #    job-store-type: memory  # jdbc
 #    scheduler-name: MyScheduler

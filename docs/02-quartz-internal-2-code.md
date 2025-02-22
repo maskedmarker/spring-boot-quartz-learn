@@ -46,6 +46,7 @@ public void run() {
 
 				clearSignaledSchedulingChange();
 				try {
+				    // 重点1: acquire Trigger 
 					triggers = qsRsrcs.getJobStore().acquireNextTriggers(now + idleWaitTime, Math.min(availThreadCount, qsRsrcs.getMaxBatchSize()), qsRsrcs.getBatchTimeWindow());
 					acquiresFailed = 0;
 					if (log.isDebugEnabled())
@@ -107,6 +108,7 @@ public void run() {
 					}
 					if(goAhead) {
 						try {
+						    // 重点12: Scheduler通知JobStore,fire指定的Trigger,更新相关对象的状态
 							List<TriggerFiredResult> res = qsRsrcs.getJobStore().triggersFired(triggers);
 							if(res != null)
 								bndles = res;
@@ -117,6 +119,7 @@ public void run() {
 							//QTZ-179 : a problem occurred interacting with the triggers from the db
 							//we release them and loop again
 							for (int i = 0; i < triggers.size(); i++) {
+							    // 重点3: release Trigger
 								qsRsrcs.getJobStore().releaseAcquiredTrigger(triggers.get(i));
 							}
 							continue;
@@ -130,6 +133,7 @@ public void run() {
 
 						if (exception instanceof RuntimeException) {
 							getLog().error("RuntimeException while firing trigger " + triggers.get(i), exception);
+							// 重点3: release Trigger
 							qsRsrcs.getJobStore().releaseAcquiredTrigger(triggers.get(i));
 							continue;
 						}
@@ -138,6 +142,7 @@ public void run() {
 						// blocked, or other similar occurrences that prevent it being
 						// fired at this time...  or if the scheduler was shutdown (halted)
 						if (bndle == null) {
+						    // 重点3: release Trigger
 							qsRsrcs.getJobStore().releaseAcquiredTrigger(triggers.get(i));
 							continue;
 						}
@@ -147,16 +152,19 @@ public void run() {
 							shell = qsRsrcs.getJobRunShellFactory().createJobRunShell(bndle);
 							shell.initialize(qs);
 						} catch (SchedulerException se) {
+						    // 重点5: 异常场景,通知JobStore,job状态错误,更新相关对象的状态
 							qsRsrcs.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(), CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
 							continue;
 						}
 
+                        // 重点4: 使用线程池中的可用线程执行任务
 						if (qsRsrcs.getThreadPool().runInThread(shell) == false) {
 							// this case should never happen, as it is indicative of the
 							// scheduler being shutdown or a bug in the thread pool or
 							// a thread pool being used concurrently - which the docs
 							// say not to do...
 							getLog().error("ThreadPool.runInThread() return false!");
+							// 重点5: 通知JobStore,job执行完成,更新相关对象的状态
 							qsRsrcs.getJobStore().triggeredJobComplete(triggers.get(i), bndle.getJobDetail(), CompletedExecutionInstruction.SET_ALL_JOB_TRIGGERS_ERROR);
 						}
 

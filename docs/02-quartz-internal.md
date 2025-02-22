@@ -141,4 +141,23 @@ These clustering capabilities are injected into the bytecode of the application 
 ```
 
 
+### cluster
 
+quartz的集群模式需要使用到Terracotta技术.
+
+```text
+Clustering currently works with the JDBC-Jobstore (JobStoreTX or JobStoreCMT) and the TerracottaJobStore. 
+Features include load-balancing and job fail-over (if the JobDetail’s “request recovery” flag is set to true).
+
+
+Clustering With JobStoreTX or JobStoreCMT Enable clustering by setting the “org.quartz.jobStore.isClustered” property to “true”. 
+Each instance in the cluster should use the same copy of the quartz.properties file. 
+Exceptions of this would be to use properties files that are identical, with the following allowable exceptions: Different thread pool size, and different value for the “org.quartz.scheduler.instanceId” property. Each node in the cluster MUST have a unique instanceId, which is easily done (without needing different properties files) by placing “AUTO” as the value of this property.
+
+
+Never run clustering on separate machines, unless their clocks are synchronized using some form of time-sync service (daemon) that runs very regularly (the clocks must be within a second of each other). 
+
+
+Never fire-up a non-clustered instance against the same set of tables that any other instance is running against. 
+You may get serious data corruption, and will definitely experience erratic behavior.
+```

@@ -31,8 +31,7 @@
 
     <!-- 配置日志记录器 -->
     <Loggers>
-        <!--为mybatis输出sql日志设置独立的logger DEBUG才能触发输出-->
-        <logger name="org.example.learn.spring.boot.mybatis.hello.dao.mapper" additivity="false" level="DEBUG">
+        <logger name="org.example.learn" additivity="false">
             <AppenderRef ref="Console"/>
         </logger>
         <!-- 设置根日志记录器 -->

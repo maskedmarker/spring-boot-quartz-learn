@@ -61,4 +61,4 @@ logging:
     root: DEBUG
 #    org.springframework: INFO
     org.quartz: DEBUG
-    org.example: DEBUG
+    org.example.learn: DEBUG

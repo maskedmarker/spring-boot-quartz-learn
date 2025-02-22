@@ -5,6 +5,8 @@
 https://www.quartz-scheduler.org/documentation/quartz-2.3.0/quick-start.html
 https://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/
 
+有一篇解释quartz的好文章
+http://wangtianzhi.cn/2016/01/03/quartz-source-analysis/
 
 ## 关键概念
 

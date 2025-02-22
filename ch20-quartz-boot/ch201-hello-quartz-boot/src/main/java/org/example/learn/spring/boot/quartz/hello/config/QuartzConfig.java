@@ -44,7 +44,8 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
                 .forJob(job2)
                 .withIdentity("trigger2", "group2")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0/9 * * * * ?").withMisfireHandlingInstructionFireAndProceed())  // Runs every 5 seconds
+                .withSchedule(CronScheduleBuilder.cronSchedule("0/9 * * * * ?")
+                        .withMisfireHandlingInstructionDoNothing()) // 如果misfire,等下次调度时间到来
                 .build();
     }
 
@@ -61,7 +62,8 @@ public class QuartzConfig {
         return TriggerBuilder.newTrigger()
                 .forJob(job3)
                 .withIdentity("trigger3", "group3")
-                .withSchedule(CronScheduleBuilder.cronSchedule("0/7 * * * * ?").withMisfireHandlingInstructionIgnoreMisfires())  // Runs every 5 seconds
+                .withSchedule(CronScheduleBuilder.cronSchedule("0/7 * * * * ?")
+                        .withMisfireHandlingInstructionIgnoreMisfires()) //
                 .build();
     }
 }

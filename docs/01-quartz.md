@@ -8,6 +8,7 @@ https://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/
 
 ## 关键概念
 
+
 ### Scheduler
 
 ```text
@@ -125,6 +126,32 @@ org.quartz.jobStore.class - All of Quartz’s data, such as details of jobs and 
 ```
 
 
+### misfire
+
+
+A misfire occurs when the job could not be executed at its scheduled time, usually because the system was busy or a previous job execution took longer than expected. 
+Quartz allows you to define how it should handle such cases.
+In Quartz, misfire instructions define the behavior of a job when a scheduled trigger is missed.
+
+当调度器因某些原因（如系统故障、任务执行时间过长或资源限制）未能在预定时间触发任务时,就会发生misfire
+Quartz的misfire策略是用于处理任务未能按计划执行时的行为.以下是常见的策略及其说明,
+
+简单触发器（SimpleTrigger）的误触发策略:
+MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY：忽略误触发,不会重新调度任务.
+MISFIRE_INSTRUCTION_FIRE_NOW：立即触发任务,忽略误触发的次数.
+MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_EXISTING_REPEAT_COUNT：立即重新调度任务,并保留剩余的执行次数.
+MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_COUNT：立即重新调度任务,但会减少误触发的次数.
+MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT：跳过误触发的执行,根据下一次计划时间重新调度.
+
+Cron触发器（CronTrigger）的误触发策略:
+MISFIRE_INSTRUCTION_DO_NOTHING：不做任何处理,任务将等待下一个计划时间触发.
+MISFIRE_INSTRUCTION_FIRE_ONCE_NOW：立即触发一次任务,然后根据原计划继续执行.
+MISFIRE_INSTRUCTION_RESCHEDULE_NEXT_WITH_REMAINING_COUNT：跳过误触发的执行,根据下一次计划时间重新调度.
+MISFIRE_INSTRUCTION_IGNORE_MISFIRE_POLICY:
+
+默认误触发策略:
+对于 简单触发器,默认策略是 MISFIRE_INSTRUCTION_RESCHEDULE_NOW_WITH_REMAINING_COUNT
+对于 Cron触发器,默认策略是 MISFIRE_INSTRUCTION_DO_NOTHING
 
 
 ## 注意事项
